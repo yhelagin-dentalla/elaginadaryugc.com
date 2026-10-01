@@ -155,7 +155,8 @@ button { font: inherit; color: inherit; }
 
 /* ---------- photography ---------- */
 .photography { padding: clamp(44px, 4.6vw, 70px) 0 clamp(56px, 5.6vw, 84px); }
-.photography .section-title { color: var(--brown); margin-bottom: clamp(44px, 4.6vw, 72px); }
+.photography .section-title { color: var(--brown); margin-bottom: 86px; }
+@media (max-width: 900px) { .photography .section-title { margin-bottom: 56px; } }
 .photography .empty-note { color: var(--brown); }
 .photo-grid {
   max-width: calc(var(--maxw) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter);
