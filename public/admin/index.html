@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Админ-панель · UGC</title>
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/assets/fonts/pinyon-script-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <!-- login -->
+  <section class="login" id="loginView" hidden>
+    <form class="login-card" id="loginForm">
+      <div class="brand">Admin</div>
+      <p class="muted">Вход в панель управления сайтом</p>
+      <label class="field">
+        <span>Пароль</span>
+        <input type="password" id="password" autocomplete="current-password" required autofocus>
+      </label>
+      <button class="btn primary wide" type="submit">Войти</button>
+      <p class="form-error" id="loginError" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- app -->
+  <div class="app" id="appView" hidden>
+    <header class="topbar">
+      <div class="brand small">Admin</div>
+      <div class="save-state" id="saveState" aria-live="polite">Всё сохранено</div>
+      <div class="top-actions">
+        <a class="btn ghost" href="/" target="_blank" rel="noopener">Открыть сайт ↗</a>
+        <button class="btn ghost" id="logoutBtn" type="button">Выйти</button>
+      </div>
+    </header>
+
+    <div class="warn" id="storageWarn" hidden>
+      Хранилище не подключено: в Cloudflare Pages не добавлены привязки <b>CONTENT</b> (KV) и <b>MEDIA</b> (R2). Изменения не сохранятся — см. инструкцию по настройке.
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="main" aria-selected="true">Главная</button>
+      <button role="tab" data-tab="about">Обо мне</button>
+      <button role="tab" data-tab="videos">Видео</button>
+      <button role="tab" data-tab="photos">Фото</button>
+      <button role="tab" data-tab="brands">Бренды</button>
+      <button role="tab" data-tab="contact">Контакты</button>
+    </nav>
+
+    <main class="panels">
+      <!-- MAIN -->
+      <section class="panel" data-panel="main">
+        <div class="card">
+          <h2>Первый экран</h2>
+          <div class="image-field" data-image="hero.image" data-alt="hero.imageAlt" data-wide></div>
+          <label class="field">
+            <span>Положение кадра (что видно на узком экране)</span>
+            <select data-field="hero.focus">
+              <option value="50% 20%">Верх</option>
+              <option value="50% 22%">Выше центра</option>
+              <option value="50% 35%">Чуть выше центра</option>
+              <option value="50% 50%">Центр</option>
+              <option value="50% 70%">Низ</option>
+              <option value="30% 35%">Левее</option>
+              <option value="70% 35%">Правее</option>
+            </select>
+          </label>
+          <div class="grid2">
+            <label class="field"><span>Имя (крупно, рукописным шрифтом)</span><input data-field="site.name"></label>
+            <label class="field"><span>Подзаголовок</span><input data-field="site.tagline"></label>
+          </div>
+          <label class="field"><span>Вступительный текст под первым экраном</span><textarea rows="3" data-field="site.intro"></textarea></label>
+        </div>
+        <div class="card">
+          <h2>Контакты в шапке</h2>
+          <div class="grid2">
+            <label class="field"><span>Instagram (ник)</span><input data-field="site.instagramHandle" placeholder="@elaginadary"></label>
+            <label class="field"><span>Instagram (ссылка)</span><input data-field="site.instagramUrl" type="url"></label>
+          </div>
+          <label class="field"><span>E-mail</span><input data-field="site.email" type="email"></label>
+        </div>
+        <div class="card">
+          <h2>Для поисковиков</h2>
+          <label class="field"><span>Заголовок вкладки</span><input data-field="site.seoTitle"></label>
+          <label class="field"><span>Описание</span><textarea rows="2" data-field="site.seoDescription"></textarea></label>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="panel" data-panel="about" hidden>
+        <div class="card">
+          <h2>Обо мне</h2>
+          <div class="image-field" data-image="about.image" data-alt="about.imageAlt"></div>
+          <div class="grid2">
+            <label class="field"><span>Надпись над заголовком</span><input data-field="about.subtitle"></label>
+            <label class="field"><span>Заголовок</span><input data-field="about.heading"></label>
+          </div>
+          <label class="field"><span>Пункты (каждый с новой строки)</span><textarea rows="10" data-lines="about.bullets"></textarea></label>
+          <label class="field"><span>Подпись</span><input data-field="about.signature"></label>
+        </div>
+      </section>
+
+      <!-- VIDEOS -->
+      <section class="panel" data-panel="videos" hidden>
+        <div class="card">
+          <div class="card-head">
+            <h2>Видео в портфолио</h2>
+            <label class="btn primary">
+              + Добавить видео
+              <input type="file" accept="video/mp4,video/quicktime,video/webm" multiple hidden id="videoInput">
+            </label>
+          </div>
+          <p class="muted">MP4 или MOV до 95 МБ, вертикальные 9:16. Обложка создаётся автоматически из кадра, её можно заменить.</p>
+          <div class="uploads" id="videoUploads"></div>
+          <div class="items" id="videoList"></div>
+        </div>
+        <div class="card">
+          <h2>Категории</h2>
+          <label class="field"><span>Через запятую. На сайте показываются только категории, в которых есть видео.</span><input id="categoriesInput"></label>
+          <div class="grid2">
+            <label class="field"><span>Надпись над заголовком</span><input data-field="portfolio.subtitle"></label>
+            <label class="field"><span>Заголовок</span><input data-field="portfolio.heading"></label>
+          </div>
+          <label class="field"><span>Текст, пока видео нет</span><input data-field="portfolio.emptyText"></label>
+        </div>
+      </section>
+
+      <!-- PHOTOS -->
+      <section class="panel" data-panel="photos" hidden>
+        <div class="card" data-gallery="photography">
+          <div class="card-head">
+            <h2>Фотография</h2>
+            <label class="btn primary">+ Добавить фото<input type="file" accept="image/*" multiple hidden></label>
+          </div>
+          <label class="field"><span>Заголовок раздела</span><input data-field="photography.heading"></label>
+          <div class="uploads"></div>
+          <div class="items photo-items"></div>
+        </div>
+        <div class="card" data-gallery="ugcPhotos">
+          <div class="card-head">
+            <h2>UGC-фото</h2>
+            <label class="btn primary">+ Добавить фото<input type="file" accept="image/*" multiple hidden></label>
+          </div>
+          <label class="field"><span>Заголовок раздела</span><input data-field="ugcPhotos.heading"></label>
+          <div class="uploads"></div>
+          <div class="items photo-items"></div>
+        </div>
+      </section>
+
+      <!-- BRANDS -->
+      <section class="panel" data-panel="brands" hidden>
+        <div class="card">
+          <h2>Бренды</h2>
+          <p class="muted">Раздел появится на сайте, как только здесь будет хотя бы один бренд.</p>
+          <div class="grid2">
+            <label class="field"><span>Надпись над заголовком</span><input data-field="brands.subtitle"></label>
+            <label class="field"><span>Заголовок</span><input data-field="brands.heading"></label>
+          </div>
+          <label class="field"><span>Бренды (каждый с новой строки)</span><textarea rows="12" data-lines="brands.items"></textarea></label>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="panel" data-panel="contact" hidden>
+        <div class="card">
+          <h2>Блок «Связаться»</h2>
+          <div class="grid2">
+            <label class="field"><span>Надпись над заголовком</span><input data-field="contact.subtitle"></label>
+            <label class="field"><span>Заголовок</span><input data-field="contact.heading"></label>
+          </div>
+          <p class="muted">Фото в этом блоке необязательно. Без него текст стоит по центру.</p>
+          <div class="image-field" data-image="contact.image" data-alt="contact.imageAlt" data-optional></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="/admin/admin.js" defer></script>
+</body>
+</html>

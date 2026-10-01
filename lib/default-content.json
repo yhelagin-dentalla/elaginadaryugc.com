@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "site": {
+    "name": "Daria",
+    "tagline": "UGC Creator",
+    "intro": "Warm, natural content that makes people stop scrolling. Beauty, lifestyle and everyday moments, filmed with care.",
+    "instagramHandle": "@elaginadary",
+    "instagramUrl": "https://www.instagram.com/elaginadary",
+    "email": "hello@elaginadaryugc.com",
+    "seoTitle": "Daria | UGC Creator",
+    "seoDescription": "UGC portfolio: beauty, lifestyle and product content for brands."
+  },
+  "hero": {
+    "image": "/assets/img/photo1.jpg",
+    "imageAlt": "Daria smiling in a cream knit cardigan",
+    "focus": "50% 22%"
+  },
+  "about": {
+    "subtitle": "About me",
+    "heading": "Hi Brands!",
+    "image": "/assets/img/photo2.jpg",
+    "imageAlt": "Daria sitting on a park bench in autumn light",
+    "bullets": [
+      "Your product deserves content that feels natural and real, not staged. I create warm, polished UGC that shows your product the way people actually use it.",
+      "I film beauty, skincare, lifestyle and everyday routines: product demos, unboxings, tutorials, reviews and aesthetic b-roll.",
+      "My visual style is soft and light: natural daylight, cream and beige tones, clean compositions and calm, honest delivery.",
+      "Every video is shot vertically and edited to be ready for ads, Reels and TikTok, with or without voiceover and on-screen text."
+    ],
+    "signature": "Daria"
+  },
+  "brands": {
+    "subtitle": "Selected partnerships",
+    "heading": "Brands I've worked with",
+    "items": []
+  },
+  "portfolio": {
+    "subtitle": "Selected works",
+    "heading": "Portfolio",
+    "categories": [
+      "Skincare",
+      "Beauty",
+      "Hair Care",
+      "Lifestyle"
+    ],
+    "emptyText": "New videos are on the way. Message me to see recent work.",
+    "items": []
+  },
+  "photography": {
+    "heading": "Photography",
+    "items": []
+  },
+  "ugcPhotos": {
+    "heading": "UGC Photo",
+    "items": []
+  },
+  "contact": {
+    "subtitle": "Get in touch",
+    "heading": "Let's create content your audience will actually want to watch.",
+    "image": "",
+    "imageAlt": ""
+  }
+}

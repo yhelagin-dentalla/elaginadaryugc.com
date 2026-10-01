@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daria | UGC Creator</title>
+  <meta name="description" content="UGC portfolio: beauty, lifestyle and product content for brands.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Daria | UGC Creator">
+  <meta property="og:image" content="/assets/img/photo1.jpg">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/assets/fonts/pinyon-script-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="preload" as="image" href="/assets/img/photo1.jpg">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#about">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <a class="logo" href="#home" data-bind="site.name">Daria</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#about">About</a>
+      <a href="#portfolio">Videos</a>
+      <a href="#photography" data-section-link="photography">Photography</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#portfolio">Videos</a>
+    <a href="#photography" data-section-link="photography">Photography</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-media">
+        <img id="heroImg" src="/assets/img/photo1.jpg" alt="" fetchpriority="high">
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title" data-bind="site.name">Daria</h1>
+        <p class="hero-tagline" data-bind="site.tagline">UGC Creator</p>
+      </div>
+      <div class="hero-badges">
+        <a class="badge" id="heroInsta" href="#" target="_blank" rel="noopener">
+          <span class="badge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="fill"/></svg>
+          </span>
+          <span data-bind="site.instagramHandle"></span>
+        </a>
+        <a class="badge" id="heroMail" href="#">
+          <span class="badge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
+          </span>
+          <span data-bind="site.email"></span>
+        </a>
+      </div>
+    </section>
+
+    <p class="intro reveal" data-bind="site.intro"></p>
+
+    <section class="section about" id="about">
+      <div class="container about-grid">
+        <figure class="about-photo reveal">
+          <div class="about-photo-inner"><img id="aboutImg" src="/assets/img/photo2.jpg" alt="" loading="lazy"></div>
+        </figure>
+        <div class="about-text reveal">
+          <span class="eyebrow" data-bind="about.subtitle"></span>
+          <h2 class="script-title" data-bind="about.heading"></h2>
+          <ul class="bullets" id="aboutBullets"></ul>
+          <p class="signature" data-bind="about.signature"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section brands" id="brands" hidden>
+      <div class="container">
+        <span class="eyebrow center" data-bind="brands.subtitle"></span>
+        <h2 class="script-title center" data-bind="brands.heading"></h2>
+        <div class="brand-list" id="brandList"></div>
+      </div>
+    </section>
+
+    <section class="section portfolio" id="portfolio">
+      <div class="container">
+        <span class="eyebrow center" data-bind="portfolio.subtitle"></span>
+        <h2 class="script-title center" data-bind="portfolio.heading"></h2>
+        <div class="filters" id="filters" role="tablist" aria-label="Video categories"></div>
+      </div>
+      <div class="rail-wrap">
+        <div class="rail" id="videoRail"></div>
+      </div>
+      <div class="rail-controls" id="railControls">
+        <button class="round-btn" data-dir="-1" aria-label="Previous videos"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="round-btn" data-dir="1" aria-label="Next videos"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="photography" hidden>
+      <div class="container">
+        <h2 class="script-title center" data-bind="photography.heading"></h2>
+        <div class="gallery" id="photoGallery"></div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="ugc-photo" hidden>
+      <div class="container">
+        <h2 class="script-title center" data-bind="ugcPhotos.heading"></h2>
+        <div class="gallery" id="ugcGallery"></div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="container contact-grid" id="contactGrid">
+        <div class="contact-text reveal">
+          <span class="eyebrow" data-bind="contact.subtitle"></span>
+          <h2 class="contact-heading" data-bind="contact.heading"></h2>
+          <div class="contact-actions">
+            <a class="pill-btn" id="contactMail" href="#"><span data-bind="site.email"></span></a>
+            <a class="pill-btn ghost" id="contactInsta" href="#" target="_blank" rel="noopener"><span data-bind="site.instagramHandle"></span></a>
+          </div>
+        </div>
+        <figure class="contact-photo reveal" id="contactPhoto" hidden><img alt="" loading="lazy"></figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="footer-name" data-bind="site.name">Daria</span>
+    <span>© <span id="year"></span> · UGC portfolio</span>
+  </footer>
+
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="lb-close" aria-label="Close">×</button>
+    <button class="lb-nav prev" aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <img alt="">
+    <button class="lb-nav next" aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>
