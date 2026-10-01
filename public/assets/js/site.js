@@ -55,7 +55,8 @@
     fill($("#brandList"), brands.map(function (b) { return el("span", { text: b }); }));
 
     videos.setup(c.portfolio);
-    photos.setup(c.photography);
+    // Photos have no categories: one grid with everything.
+    photos.setup(Object.assign({}, c.photography, { categories: [] }));
 
     var cp = $("#contactPhoto");
     cp.hidden = !c.contact.image;

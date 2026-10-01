@@ -28,13 +28,17 @@
   },
   "portfolio": {
     "heading": "Portfolio",
-    "categories": ["Beauty", "Fashion", "Experiences", "Food&Drinks"],
+    "categories": [
+      "Beauty",
+      "Fashion",
+      "Experiences",
+      "Food&Drinks"
+    ],
     "emptyText": "New videos are coming soon.",
     "items": []
   },
   "photography": {
     "heading": "Photography",
-    "categories": ["Beauty", "Fashion", "Experiences", "Food&Drinks"],
     "emptyText": "New photos are coming soon.",
     "items": []
   },

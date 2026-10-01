@@ -153,14 +153,6 @@
       n.value = (get(path) || []).join("\n");
       n.oninput = function () { set(path, n.value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean)); scheduleSave(); };
     });
-    var pcats = $("#photoCategoriesInput");
-    pcats.value = (content.photography.categories || []).join(", ");
-    pcats.onchange = function () {
-      var list = pcats.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-      content.photography.categories = list.filter(function (c, i) { return list.indexOf(c) === i; });
-      pcats.value = content.photography.categories.join(", ");
-      renderAllGalleries(); scheduleSave();
-    };
     var cats = $("#categoriesInput");
     cats.value = (content.portfolio.categories || []).join(", ");
     cats.onchange = function () {
@@ -296,17 +288,6 @@
   });
 
   // ---------- photo gallery ----------
-  function categorySelect(it, cats, onchange) {
-    var list = cats.slice();
-    if (it.category && list.indexOf(it.category) === -1) list.push(it.category);
-    var sel = el("select");
-    list.forEach(function (c) { sel.appendChild(el("option", { value: c, text: c })); });
-    if (!it.category && list[0]) it.category = list[0];
-    sel.value = it.category || "";
-    sel.onchange = function () { it.category = sel.value; onchange(); };
-    return sel;
-  }
-
   function renderGallery(card) {
     var key = card.getAttribute("data-gallery"), items = content[key].items, listEl = $(".items", card);
     listEl.innerHTML = "";
@@ -317,10 +298,7 @@
       listEl.appendChild(el("div", { class: "item" }, [
         el("div", { class: "thumb" }, [el("img", { src: it.src, alt: "", loading: "lazy" })]),
         el("div", { class: "item-fields" }, [
-          el("div", { class: "grid2" }, [
-            el("label", { class: "field" }, [el("span", { text: "Описание" }), alt]),
-            el("label", { class: "field" }, [el("span", { text: "Категория" }), categorySelect(it, content[key].categories || [], scheduleSave)])
-          ])
+          el("label", { class: "field" }, [el("span", { text: "Описание" }), alt])
         ]),
         el("div", { class: "item-tools" }, moveTools(items, i, function () { renderGallery(card); }).concat([
           el("button", { class: "btn icon danger", type: "button", title: "Удалить", "aria-label": "Удалить фото", text: "✕", onclick: function () {
@@ -341,7 +319,7 @@
       files.reduce(function (chain, f) {
         return chain.then(function () {
           return uploadImageFile(f, rowsEl).then(function (url) {
-            content[key].items.push({ id: uid(), src: url, alt: "", category: (content[key].categories || [])[0] || "" }); renderGallery(card); return saveNow();
+            content[key].items.push({ id: uid(), src: url, alt: "" }); renderGallery(card); return saveNow();
           }).catch(function (e) { toast(e.message, true); });
         });
       }, Promise.resolve());
@@ -364,7 +342,6 @@
     return fetch("/api/content", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (c) {
       content = c;
       ["brands", "photography"].forEach(function (k) { content[k] = content[k] || {}; content[k].items = content[k].items || []; });
-      content.photography.categories = content.photography.categories || [];
       content.portfolio.items = content.portfolio.items || [];
       content.portfolio.categories = content.portfolio.categories || [];
       bindFields(); renderImageFields(); renderVideos(); renderAllGalleries();
