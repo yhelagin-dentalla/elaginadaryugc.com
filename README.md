@@ -21,7 +21,7 @@ UGC-портфолио для `elaginadaryugc.com`: сайт + админ-пан
 2. **Create bucket** → имя `elaginadary-ugc-media` (точно такое), Location: Automatic.
 
 ### 2. Проект Pages из GitHub
-1. **Workers & Pages → Create → вкладка Pages → Connect to Git** → репозиторий `yhelagin-dentalla/elaginadaryugs.com`.
+1. **Workers & Pages → Create → вкладка Pages → Connect to Git** → репозиторий `yhelagin-dentalla/elaginadaryugc.com`.
 2. Production branch: `main`, Framework preset: **None**, Build command: *(пусто)*, Build output directory: `public`.
 3. **Save and Deploy**.
 
