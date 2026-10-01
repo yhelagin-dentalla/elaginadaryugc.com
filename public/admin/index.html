@@ -42,7 +42,7 @@
 
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="main" aria-selected="true">Главная</button>
-      <button role="tab" data-tab="about">Обо мне</button>
+      <button role="tab" data-tab="about">Текст «Hi Brands»</button>
       <button role="tab" data-tab="videos">Видео</button>
       <button role="tab" data-tab="photos">Фото</button>
       <button role="tab" data-tab="brands">Бренды</button>
@@ -67,14 +67,10 @@
               <option value="70% 35%">Правее</option>
             </select>
           </label>
-          <div class="grid2">
-            <label class="field"><span>Имя (крупно, рукописным шрифтом)</span><input data-field="site.name"></label>
-            <label class="field"><span>Подзаголовок</span><input data-field="site.tagline"></label>
-          </div>
-          <label class="field"><span>Вступительный текст под первым экраном</span><textarea rows="3" data-field="site.intro"></textarea></label>
+          <label class="field"><span>Имя в шапке сайта (рукописным шрифтом)</span><input data-field="site.name"></label>
         </div>
         <div class="card">
-          <h2>Контакты в шапке</h2>
+          <h2>Контакты (кнопки на первом экране и в блоке «Связаться»)</h2>
           <div class="grid2">
             <label class="field"><span>Instagram (ник)</span><input data-field="site.instagramHandle" placeholder="@elaginadary"></label>
             <label class="field"><span>Instagram (ссылка)</span><input data-field="site.instagramUrl" type="url"></label>
@@ -91,14 +87,9 @@
       <!-- ABOUT -->
       <section class="panel" data-panel="about" hidden>
         <div class="card">
-          <h2>Обо мне</h2>
-          <div class="image-field" data-image="about.image" data-alt="about.imageAlt"></div>
-          <div class="grid2">
-            <label class="field"><span>Надпись над заголовком</span><input data-field="about.subtitle"></label>
-            <label class="field"><span>Заголовок</span><input data-field="about.heading"></label>
-          </div>
-          <label class="field"><span>Пункты (каждый с новой строки)</span><textarea rows="10" data-lines="about.bullets"></textarea></label>
-          <label class="field"><span>Подпись</span><input data-field="about.signature"></label>
+          <h2>Текст рядом с фото на первом экране</h2>
+          <label class="field"><span>Заголовок</span><input data-field="about.heading"></label>
+          <label class="field"><span>Пункты (каждый с новой строки)</span><textarea rows="12" data-lines="about.bullets"></textarea></label>
         </div>
       </section>
 
@@ -119,10 +110,7 @@
         <div class="card">
           <h2>Категории</h2>
           <label class="field"><span>Через запятую. На сайте показываются только категории, в которых есть видео.</span><input id="categoriesInput"></label>
-          <div class="grid2">
-            <label class="field"><span>Надпись над заголовком</span><input data-field="portfolio.subtitle"></label>
-            <label class="field"><span>Заголовок</span><input data-field="portfolio.heading"></label>
-          </div>
+          <label class="field"><span>Заголовок раздела</span><input data-field="portfolio.heading"></label>
           <label class="field"><span>Текст, пока видео нет</span><input data-field="portfolio.emptyText"></label>
         </div>
       </section>
@@ -131,21 +119,18 @@
       <section class="panel" data-panel="photos" hidden>
         <div class="card" data-gallery="photography">
           <div class="card-head">
-            <h2>Фотография</h2>
-            <label class="btn primary">+ Добавить фото<input type="file" accept="image/*" multiple hidden></label>
+            <h2>Фотографии</h2>
+            <label class="btn primary">+ Добавить фото<input type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></label>
           </div>
-          <label class="field"><span>Заголовок раздела</span><input data-field="photography.heading"></label>
+          <p class="muted">JPG, PNG или WebP. Большие фото уменьшаются автоматически. Новые фото попадают в первую категорию — поменяйте её у каждого фото.</p>
           <div class="uploads"></div>
           <div class="items photo-items"></div>
         </div>
-        <div class="card" data-gallery="ugcPhotos">
-          <div class="card-head">
-            <h2>UGC-фото</h2>
-            <label class="btn primary">+ Добавить фото<input type="file" accept="image/*" multiple hidden></label>
-          </div>
-          <label class="field"><span>Заголовок раздела</span><input data-field="ugcPhotos.heading"></label>
-          <div class="uploads"></div>
-          <div class="items photo-items"></div>
+        <div class="card">
+          <h2>Категории и тексты</h2>
+          <label class="field"><span>Категории через запятую. На сайте показываются только категории, в которых есть фото.</span><input id="photoCategoriesInput"></label>
+          <label class="field"><span>Заголовок раздела</span><input data-field="photography.heading"></label>
+          <label class="field"><span>Текст, пока фото нет</span><input data-field="photography.emptyText"></label>
         </div>
       </section>
 
@@ -154,10 +139,7 @@
         <div class="card">
           <h2>Бренды</h2>
           <p class="muted">Раздел появится на сайте, как только здесь будет хотя бы один бренд.</p>
-          <div class="grid2">
-            <label class="field"><span>Надпись над заголовком</span><input data-field="brands.subtitle"></label>
-            <label class="field"><span>Заголовок</span><input data-field="brands.heading"></label>
-          </div>
+          <label class="field"><span>Заголовок</span><input data-field="brands.heading"></label>
           <label class="field"><span>Бренды (каждый с новой строки)</span><textarea rows="12" data-lines="brands.items"></textarea></label>
         </div>
       </section>
@@ -167,10 +149,10 @@
         <div class="card">
           <h2>Блок «Связаться»</h2>
           <div class="grid2">
-            <label class="field"><span>Надпись над заголовком</span><input data-field="contact.subtitle"></label>
-            <label class="field"><span>Заголовок</span><input data-field="contact.heading"></label>
+            <label class="field"><span>Рукописный заголовок</span><input data-field="contact.subtitle"></label>
+            <label class="field"><span>Текст</span><input data-field="contact.heading"></label>
           </div>
-          <p class="muted">Фото в этом блоке необязательно. Без него текст стоит по центру.</p>
+          <p class="muted">Фото справа. Если его убрать, текст встанет по центру.</p>
           <div class="image-field" data-image="contact.image" data-alt="contact.imageAlt" data-optional></div>
         </div>
       </section>

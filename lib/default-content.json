@@ -1,62 +1,47 @@
 {
-  "version": 1,
+  "version": 2,
   "site": {
-    "name": "Daria",
-    "tagline": "UGC Creator",
-    "intro": "Warm, natural content that makes people stop scrolling. Beauty, lifestyle and everyday moments, filmed with care.",
+    "name": "Daria Elagina",
     "instagramHandle": "@elaginadary",
     "instagramUrl": "https://www.instagram.com/elaginadary",
-    "email": "hello@elaginadaryugc.com",
-    "seoTitle": "Daria | UGC Creator",
-    "seoDescription": "UGC portfolio: beauty, lifestyle and product content for brands."
+    "email": "elagina.dari@gmail.com",
+    "seoTitle": "Daria Elagina | UGC Creator",
+    "seoDescription": "Austria-based lifestyle & UGC creator: beauty, fashion, experiences and food & drinks content for brands."
   },
   "hero": {
     "image": "/assets/img/photo1.jpg",
     "imageAlt": "Daria smiling in a cream knit cardigan",
-    "focus": "50% 22%"
+    "focus": "40% 30%"
   },
   "about": {
-    "subtitle": "About me",
     "heading": "Hi Brands!",
-    "image": "/assets/img/photo2.jpg",
-    "imageAlt": "Daria sitting on a park bench in autumn light",
     "bullets": [
-      "Your product deserves content that feels natural and real, not staged. I create warm, polished UGC that shows your product the way people actually use it.",
-      "I film beauty, skincare, lifestyle and everyday routines: product demos, unboxings, tutorials, reviews and aesthetic b-roll.",
-      "My visual style is soft and light: natural daylight, cream and beige tones, clean compositions and calm, honest delivery.",
-      "Every video is shot vertically and edited to be ready for ads, Reels and TikTok, with or without voiceover and on-screen text."
-    ],
-    "signature": "Daria"
+      "I create warm, natural and visually polished content that feels authentic, relatable and made to stop the scroll — without looking overly staged or “too ad-like.”",
+      "I’m an Austria-based lifestyle & UGC creator sharing beauty, fashion, wellness and everyday life. Alongside content creation, I’m also a medical student, which naturally shapes my content around routines, balance, self-care and real everyday moments.",
+      "My visual style is feminine, clean and lifestyle-driven, with warm neutrals, soft natural light, simple details, cozy settings and an elevated but still approachable feel.",
+      "I help brands present their products naturally through aesthetic b-roll, product demos, tutorials, voiceovers, lifestyle integrations, clean product shots and content that fits seamlessly into everyday life."
+    ]
   },
   "brands": {
-    "subtitle": "Selected partnerships",
-    "heading": "Brands I've worked with",
+    "heading": "Brands I’ve worked with",
     "items": []
   },
   "portfolio": {
-    "subtitle": "Selected works",
     "heading": "Portfolio",
-    "categories": [
-      "Skincare",
-      "Beauty",
-      "Hair Care",
-      "Lifestyle"
-    ],
-    "emptyText": "New videos are on the way. Message me to see recent work.",
+    "categories": ["Beauty", "Fashion", "Experiences", "Food&Drinks"],
+    "emptyText": "New videos are coming soon.",
     "items": []
   },
   "photography": {
     "heading": "Photography",
-    "items": []
-  },
-  "ugcPhotos": {
-    "heading": "UGC Photo",
+    "categories": ["Beauty", "Fashion", "Experiences", "Food&Drinks"],
+    "emptyText": "New photos are coming soon.",
     "items": []
   },
   "contact": {
     "subtitle": "Get in touch",
-    "heading": "Let's create content your audience will actually want to watch.",
-    "image": "",
-    "imageAlt": ""
+    "heading": "Let’s create content your audience will actually want to watch",
+    "image": "/assets/img/photo2.jpg",
+    "imageAlt": "Daria sitting on a park bench in autumn light"
   }
 }

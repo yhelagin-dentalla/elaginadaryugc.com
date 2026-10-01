@@ -3,10 +3,7 @@
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-
-  function get(obj, path) {
-    return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj);
-  }
+  function get(obj, path) { return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj); }
   function el(tag, attrs, children) {
     var n = document.createElement(tag);
     Object.keys(attrs || {}).forEach(function (k) {
@@ -17,11 +14,25 @@
     (children || []).forEach(function (c) { if (c) n.appendChild(c); });
     return n;
   }
-  var PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
-  var PAUSE = '<svg viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+
+  var ICON_MAIL = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></svg>';
+  var ICON_INSTA = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.8"/><circle class="dot" cx="16.9" cy="7.1" r="1.05"/></svg>';
+  var PLAY = '<svg viewBox="0 0 24 24"><path d="M6 3.5v17l15-8.5z"/></svg>';
+  var PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+
+  function pills(c) {
+    var out = [];
+    if (c.site.email) out.push(el("a", { class: "pill", href: "mailto:" + c.site.email }, [
+      el("span", { class: "pill-icon", html: ICON_MAIL }), el("span", { text: c.site.email })
+    ]));
+    if (c.site.instagramHandle) out.push(el("a", { class: "pill", href: c.site.instagramUrl || "#", target: "_blank", rel: "noopener" }, [
+      el("span", { class: "pill-icon", html: ICON_INSTA }), el("span", { text: c.site.instagramHandle })
+    ]));
+    return out;
+  }
+  function fill(node, children) { node.innerHTML = ""; children.forEach(function (c) { node.appendChild(c); }); }
 
   function render(c) {
-    // simple text bindings
     $$("[data-bind]").forEach(function (n) {
       var v = get(c, n.getAttribute("data-bind"));
       if (typeof v === "string") n.textContent = v;
@@ -30,121 +41,92 @@
     var md = $('meta[name="description"]');
     if (md && c.site.seoDescription) md.setAttribute("content", c.site.seoDescription);
 
-    // links
-    var mail = "mailto:" + (c.site.email || "");
-    $("#heroMail").href = mail; $("#contactMail").href = mail;
-    $("#heroInsta").href = c.site.instagramUrl || "#"; $("#contactInsta").href = c.site.instagramUrl || "#";
-    $("#heroMail").hidden = $("#contactMail").hidden = !c.site.email;
-    $("#heroInsta").hidden = $("#contactInsta").hidden = !c.site.instagramHandle;
-    $(".intro").hidden = !c.site.intro;
-
-    // hero + about photos
     var hero = $("#heroImg");
     if (c.hero.image && hero.getAttribute("src") !== c.hero.image) hero.src = c.hero.image;
     hero.alt = c.hero.imageAlt || "";
-    hero.style.objectPosition = c.hero.focus || "50% 40%";
-    var about = $("#aboutImg");
-    if (c.about.image) about.src = c.about.image;
-    about.alt = c.about.imageAlt || "";
-    $(".about-photo").hidden = !c.about.image;
+    hero.style.objectPosition = c.hero.focus || "40% 30%";
 
-    var ul = $("#aboutBullets"); ul.innerHTML = "";
-    (c.about.bullets || []).filter(Boolean).forEach(function (b) { ul.appendChild(el("li", {}, [el("span", { text: b })])); });
+    fill($("#aboutBullets"), (c.about.bullets || []).filter(Boolean).map(function (b) { return el("li", {}, [el("span", { text: b })]); }));
+    fill($("#heroPills"), pills(c));
+    fill($("#contactPills"), pills(c));
 
-    // brands
-    var brands = (c.brands.items || []).filter(Boolean);
-    $("#brands").hidden = brands.length === 0;
-    var bl = $("#brandList"); bl.innerHTML = "";
-    brands.forEach(function (b) { bl.appendChild(el("span", { text: b })); });
+    var brands = ((c.brands && c.brands.items) || []).filter(Boolean);
+    $("#brands").hidden = !brands.length;
+    fill($("#brandList"), brands.map(function (b) { return el("span", { text: b }); }));
 
-    renderPortfolio(c.portfolio);
-    renderGallery("#photography", "#photoGallery", c.photography.items || []);
-    renderGallery("#ugc-photo", "#ugcGallery", c.ugcPhotos.items || []);
-    var hasPhotos = (c.photography.items || []).length || (c.ugcPhotos.items || []).length;
-    $$('[data-section-link="photography"]').forEach(function (a) {
-      a.hidden = !hasPhotos;
-      a.setAttribute("href", (c.photography.items || []).length ? "#photography" : "#ugc-photo");
-    });
+    videos.setup(c.portfolio);
+    photos.setup(c.photography);
 
-    // contact
     var cp = $("#contactPhoto");
-    if (c.contact.image) {
-      cp.hidden = false; $("img", cp).src = c.contact.image; $("img", cp).alt = c.contact.imageAlt || "";
-      $("#contactGrid").classList.add("with-photo");
-    } else {
-      cp.hidden = true; $("#contactGrid").classList.remove("with-photo");
-    }
-    observeReveals();
+    cp.hidden = !c.contact.image;
+    $(".contact-card").classList.toggle("no-photo", !c.contact.image);
+    if (c.contact.image) { $("img", cp).src = c.contact.image; $("img", cp).alt = c.contact.imageAlt || ""; }
   }
 
-  // ---------- portfolio ----------
-  var portfolioState = { items: [], filter: null };
-
-  function renderPortfolio(p) {
-    portfolioState.items = p.items || [];
-    var used = (p.categories || []).filter(function (cat) {
-      return portfolioState.items.some(function (it) { return it.category === cat; });
-    });
-    var filters = $("#filters"); filters.innerHTML = "";
-    filters.hidden = used.length < 2;
-    if (used.indexOf(portfolioState.filter) === -1) portfolioState.filter = used[0] || null;
-    used.forEach(function (cat) {
-      var b = el("button", { class: "filter-btn", role: "tab", type: "button", "aria-selected": String(cat === portfolioState.filter), text: cat });
-      b.addEventListener("click", function () {
-        portfolioState.filter = cat;
-        $$(".filter-btn", filters).forEach(function (x) { x.setAttribute("aria-selected", String(x === b)); });
-        drawRail(p);
-      });
-      filters.appendChild(b);
-    });
-    drawRail(p);
+  // ---------- filtered sections (videos + photos share the same logic) ----------
+  function FilteredSection(opts) {
+    var state = { data: null, filter: null };
+    function setup(data) {
+      state.data = data;
+      var items = data.items || [];
+      var cats = (data.categories || []).filter(function (cat) { return items.some(function (it) { return it.category === cat; }); });
+      var filters = $(opts.filters);
+      var showAll = !items.length; // nothing uploaded yet: show categories as in the mockup
+      var list = showAll ? (data.categories || []) : cats;
+      if (list.indexOf(state.filter) === -1) state.filter = showAll ? null : list[0] || null;
+      filters.classList.toggle("static", showAll);
+      filters.hidden = !list.length;
+      fill(filters, list.map(function (cat) {
+        var b = el("button", { class: "filter-btn", type: "button", role: "tab", "aria-selected": String(cat === state.filter), text: cat });
+        if (!showAll) b.addEventListener("click", function () {
+          state.filter = cat;
+          $$(".filter-btn", filters).forEach(function (x) { x.setAttribute("aria-selected", String(x === b)); });
+          draw();
+        });
+        else b.setAttribute("tabindex", "-1");
+        return b;
+      }));
+      draw();
+    }
+    function draw() {
+      var items = (state.data.items || []).filter(function (it) { return !state.filter || it.category === state.filter; });
+      var grid = $(opts.grid), note = $(opts.empty);
+      if (!(state.data.items || []).length) {
+        fill(grid, opts.placeholders());
+        note.textContent = state.data.emptyText || ""; note.hidden = !state.data.emptyText;
+        return;
+      }
+      note.hidden = true;
+      fill(grid, items.map(opts.card));
+    }
+    return { setup: setup, items: function () { return (state.data.items || []).filter(function (it) { return !state.filter || it.category === state.filter; }); } };
   }
 
-  function drawRail(p) {
-    var rail = $("#videoRail"); rail.innerHTML = "";
-    var old = $(".empty-note"); if (old) old.remove();
-    var list = portfolioState.items.filter(function (it) { return !portfolioState.filter || it.category === portfolioState.filter; });
-
-    if (!list.length) {
-      ["Coming", "soon", "✦"].forEach(function (word) {
-        rail.appendChild(el("div", { class: "v-card placeholder", "aria-hidden": "true" }, [
-          el("div", { class: "v-frame" }, [el("span", { class: "placeholder-mark", text: word })])
-        ]));
+  var videos = FilteredSection({
+    filters: "#videoFilters", grid: "#videoGrid", empty: "#videoEmpty",
+    placeholders: function () {
+      return ["Coming", "soon", "", ""].map(function (w) {
+        return el("div", { class: "v-card placeholder", "aria-hidden": "true" }, [el("div", { class: "v-frame" }, [w ? el("span", { class: "placeholder-mark", text: w }) : null])]);
       });
-      rail.classList.add("centered");
-      rail.parentNode.appendChild(el("p", { class: "empty-note", text: p.emptyText || "" }));
-      $("#railControls").hidden = true;
-      return;
-    }
-
-    list.forEach(function (it) {
+    },
+    card: function (it) {
       var video = el("video", { src: it.poster ? it.src : it.src + "#t=0.1", preload: "metadata", playsinline: "", loop: "" });
       if (it.poster) video.setAttribute("poster", it.poster);
-      video.muted = false;
-      var btn = el("button", { class: "v-play", type: "button", "aria-label": "Play video: " + (it.title || ""), html: PLAY });
+      var btn = el("button", { class: "v-play", type: "button", "aria-label": "Play video" + (it.title ? ": " + it.title : ""), html: PLAY });
       var frame = el("div", { class: "v-frame" }, [video, btn]);
       frame.addEventListener("click", function () { toggle(video, frame, btn); });
       video.addEventListener("ended", function () { frame.classList.remove("playing"); btn.innerHTML = PLAY; });
-      rail.appendChild(el("article", { class: "v-card" }, [
-        frame,
-        el("div", { class: "v-info" }, [
-          it.title ? el("h3", { class: "v-title", text: it.title }) : null,
-          it.brand ? el("span", { class: "v-brand", text: it.brand }) : null
-        ])
-      ]));
-    });
-    var fits = window.innerWidth < 900 ? 1 : 3;
-    rail.classList.toggle("centered", list.length <= fits);
-    $("#railControls").hidden = list.length <= fits;
-    rail.scrollLeft = 0;
-  }
+      return el("article", { class: "v-card" }, [frame, (it.title || it.brand) ? el("div", { class: "v-info" }, [
+        it.title ? el("h3", { class: "v-title", text: it.title }) : null,
+        it.brand ? el("span", { class: "v-brand", text: it.brand }) : null
+      ]) : null]);
+    }
+  });
 
   function toggle(video, frame, btn) {
     if (video.paused) {
-      $$("#videoRail video").forEach(function (v) {
-        if (v !== video && !v.paused) {
-          v.pause(); var f = v.parentNode; f.classList.remove("playing"); $(".v-play", f).innerHTML = PLAY;
-        }
+      $$("#videoGrid video").forEach(function (v) {
+        if (v !== video && !v.paused) { v.pause(); v.parentNode.classList.remove("playing"); $(".v-play", v.parentNode).innerHTML = PLAY; }
       });
       var pr = video.play();
       if (pr && pr.catch) pr.catch(function () { video.muted = true; video.play(); });
@@ -154,33 +136,26 @@
     }
   }
 
-  $$("#railControls .round-btn").forEach(function (b) {
-    b.addEventListener("click", function () {
-      var rail = $("#videoRail");
-      rail.scrollBy({ left: Number(b.getAttribute("data-dir")) * Math.max(rail.clientWidth * 0.8, 260), behavior: "smooth" });
-    });
-  });
-
-  // ---------- galleries + lightbox ----------
-  var lb = { list: [], i: 0 };
-  function renderGallery(sectionSel, gridSel, items) {
-    var section = $(sectionSel), grid = $(gridSel);
-    grid.innerHTML = "";
-    section.hidden = items.length === 0;
-    var cols = Math.min(3, Math.max(1, items.length));
-    grid.style.columnCount = window.innerWidth < 480 ? Math.min(2, cols) : cols;
-    grid.style.maxWidth = cols < 3 ? (cols * 380) + "px" : "";
-    items.forEach(function (it, i) {
-      var b = el("button", { type: "button", "aria-label": "Open photo" + (it.alt ? ": " + it.alt : "") }, [
+  var photos = FilteredSection({
+    filters: "#photoFilters", grid: "#photoGrid", empty: "#photoEmpty",
+    placeholders: function () {
+      return ["", "", "soon", "", ""].map(function (w) {
+        return el("div", { class: "photo-tile placeholder", "aria-hidden": "true" }, [w ? el("span", { text: w }) : null]);
+      });
+    },
+    card: function (it) {
+      var b = el("button", { class: "photo-tile", type: "button", "aria-label": "Open photo" + (it.alt ? ": " + it.alt : "") }, [
         el("img", { src: it.src, alt: it.alt || "", loading: "lazy" })
       ]);
-      b.addEventListener("click", function () { openLb(items, i); });
-      grid.appendChild(b);
-    });
-  }
-  var box = $("#lightbox");
+      b.addEventListener("click", function () { var list = photos.items(); openLb(list, list.indexOf(it)); });
+      return b;
+    }
+  });
+
+  // ---------- lightbox ----------
+  var lb = { list: [], i: 0 }, box = $("#lightbox");
   function showLb() { var it = lb.list[lb.i]; $("img", box).src = it.src; $("img", box).alt = it.alt || ""; $$(".lb-nav", box).forEach(function (n) { n.hidden = lb.list.length < 2; }); }
-  function openLb(list, i) { lb.list = list; lb.i = i; showLb(); box.hidden = false; document.body.style.overflow = "hidden"; $(".lb-close", box).focus(); }
+  function openLb(list, i) { lb.list = list; lb.i = Math.max(0, i); showLb(); box.hidden = false; document.body.style.overflow = "hidden"; $(".lb-close", box).focus(); }
   function closeLb() { box.hidden = true; document.body.style.overflow = ""; }
   function stepLb(d) { lb.i = (lb.i + d + lb.list.length) % lb.list.length; showLb(); }
   $(".lb-close", box).addEventListener("click", closeLb);
@@ -194,9 +169,8 @@
     if (e.key === "ArrowRight") stepLb(1);
   });
 
-  // ---------- nav ----------
-  var nav = $("#nav"), burger = $("#burger"), menu = $("#mobileMenu");
-  window.addEventListener("scroll", function () { nav.classList.toggle("scrolled", window.scrollY > 30); }, { passive: true });
+  // ---------- mobile menu ----------
+  var burger = $("#burger"), menu = $("#mobileMenu");
   function setMenu(open) {
     menu.hidden = !open; burger.setAttribute("aria-expanded", String(open));
     burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
@@ -205,18 +179,10 @@
   burger.addEventListener("click", function () { setMenu(menu.hidden); });
   $$("a", menu).forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
 
-  // ---------- reveal on scroll ----------
-  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); } });
-  }, { threshold: 0.12 }) : null;
-  function observeReveals() {
-    $$(".reveal:not(.visible)").forEach(function (n) { if (io) io.observe(n); else n.classList.add("visible"); });
-  }
-
   $("#year").textContent = new Date().getFullYear();
 
   fetch("/api/content", { cache: "no-cache" })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(render)
-    .catch(function () { observeReveals(); $(".intro").hidden = true; renderPortfolio({ items: [], categories: [] }); });
+    .catch(function () { /* API unreachable: the static markup stays visible */ });
 })();
