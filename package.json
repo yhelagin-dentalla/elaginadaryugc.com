@@ -2,7 +2,7 @@
   "name": "elaginadary-ugc",
   "private": true,
   "scripts": {
-    "dev": "wrangler pages dev public --kv CONTENT --r2 MEDIA --binding ADMIN_PASSWORD=dev-password --port 8788"
+    "dev": "wrangler pages dev --binding ADMIN_PASSWORD=dev-password --port 8788"
   },
   "devDependencies": {
     "wrangler": "^4"

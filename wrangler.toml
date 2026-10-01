@@ -1,0 +1,11 @@
+name = "elaginadary-ugc"
+pages_build_output_dir = "public"
+compatibility_date = "2026-09-01"
+
+[[kv_namespaces]]
+binding = "CONTENT"
+id = "3c1a3e3bb51b457bbe700f0df964e708"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "elaginadary-ugc-media"

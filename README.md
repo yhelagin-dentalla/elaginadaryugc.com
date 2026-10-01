@@ -12,37 +12,32 @@ UGC-портфолио для `elaginadaryugc.com`: сайт + админ-пан
 
 ---
 
-## Первая настройка в Cloudflare (один раз, ~10 минут)
+## Первая настройка в Cloudflare (один раз)
 
-### 1. Хранилища
-1. **R2 → Overview → Create bucket**. Имя: `elaginadary-ugc-media`. Если R2 ещё не включён, Cloudflare попросит активировать его (бесплатно до 10 ГБ).
-2. **Storage & Databases → KV → Create namespace**. Имя: `elaginadary-ugc-content`.
+Привязки хранилищ уже прописаны в `wrangler.toml`: KV `elaginadary-ugc-content` создан, R2-бакет `elaginadary-ugc-media` ждёт включения R2.
 
-### 2. Проект Pages
-1. **Workers & Pages → Create → вкладка Pages → Connect to Git** и выберите репозиторий `elaginadary-ugc`.
-2. Настройки сборки:
-   - Framework preset: **None**
-   - Build command: *(пусто)*
-   - Build output directory: `public`
+### 1. Включить R2 и создать бакет
+1. В дашборде откройте **R2 Object Storage** и нажмите **Get started / Purchase R2**. До 10 ГБ бесплатно, но Cloudflare может попросить привязать карту.
+2. **Create bucket** → имя `elaginadary-ugc-media` (точно такое), Location: Automatic.
+
+### 2. Проект Pages из GitHub
+1. **Workers & Pages → Create → вкладка Pages → Connect to Git** → репозиторий `yhelagin-dentalla/elaginadaryugs.com`.
+2. Production branch: `main`, Framework preset: **None**, Build command: *(пусто)*, Build output directory: `public`.
 3. **Save and Deploy**.
 
-### 3. Привязки и пароль
-В проекте откройте **Settings**:
+### 3. Пароль админки
+**Settings → Variables and Secrets → Add**, тип **Secret**, окружение Production:
+- `ADMIN_PASSWORD`: пароль для входа в админку
+- `SESSION_SECRET`: любая длинная случайная строка, 40+ символов
 
-1. **Bindings → Add**:
-   - KV namespace: имя переменной `CONTENT` → `elaginadary-ugc-content`
-   - R2 bucket: имя переменной `MEDIA` → `elaginadary-ugc-media`
-2. **Variables and Secrets → Add** (тип **Secret**):
-   - `ADMIN_PASSWORD`: пароль для входа в админку
-   - `SESSION_SECRET`: любая длинная случайная строка, 40+ символов
-3. **Deployments → у последнего деплоя ⋯ → Retry deployment**. Привязки начинают работать только после нового деплоя.
+Потом **Deployments → ⋯ у последнего деплоя → Retry deployment**.
 
 ### 4. Домен
-**Custom domains → Set up a custom domain** → `elaginadaryugc.com`, затем ещё раз для `www.elaginadaryugc.com`. Домен уже в Cloudflare, поэтому DNS-записи создадутся сами. HTTPS включится автоматически, http:// будет перенаправлять на https://.
+**Custom domains → Set up a custom domain** → `elaginadaryugc.com`, затем `www.elaginadaryugc.com`. DNS-записи и HTTPS настроятся сами.
 
 ### 5. Проверка
 - `https://elaginadaryugc.com` — сайт
-- `https://elaginadaryugc.com/admin/` — админка. Если сверху жёлтая плашка «Хранилище не подключено», значит пропущен шаг 3.
+- `https://elaginadaryugc.com/admin/` — админка. Жёлтая плашка «Хранилище не подключено» означает, что бакет R2 не создан или назван иначе.
 
 ---
 
@@ -63,4 +58,4 @@ UGC-портфолио для `elaginadaryugc.com`: сайт + админ-пан
 npm install
 npm run dev
 ```
-Сайт: http://localhost:8788, админка: http://localhost:8788/admin/, пароль: `dev-password`.
+Сайт: http://localhost:8788 (локальные копии KV и R2), админка: http://localhost:8788/admin/, пароль: `dev-password`.
